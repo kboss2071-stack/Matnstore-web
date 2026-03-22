@@ -1,103 +1,234 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Matn Store</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Matn Store - متجر متن</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* الألوان الأساسية */
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --red: #D32F2F; 
+            --gray-light: #F5F5F5;
+            --border: #E0E0E0;
+        }
 
-<style>
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: #f2f2f2;
-    text-align: center;
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; -webkit-tap-highlight-color: transparent; }
 
-.container {
-    padding: 20px;
-}
+        body { background-color: var(--white); color: var(--black); padding-bottom: 70px; max-width: 480px; margin: 0 auto; box-shadow: 0 0 15px rgba(0,0,0,0.05); min-height: 100vh; position: relative; }
 
-.product-img {
-    width: 100%;
-    max-width: 320px;
-    border-radius: 10px;
-}
+        /* شريط الإعلانات */
+        .promo-bar { background-color: var(--black); color: var(--white); text-align: center; padding: 10px; font-size: 13px; font-weight: 700; }
 
-h1 {
-    font-size: 22px;
-    color: #111;
-}
+        /* الهيدر */
+        .header { position: sticky; top: 0; z-index: 100; background: var(--white); display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--black); }
+        .brand { font-size: 24px; font-weight: 900; color: var(--black); letter-spacing: 1px; }
+        .header-icons { display: flex; gap: 15px; align-items: center; }
+        .icon-btn { position: relative; font-size: 22px; color: var(--black); text-decoration: none; }
+        .cart-badge { position: absolute; top: -5px; right: -8px; background: var(--black); color: var(--white); font-size: 11px; font-weight: 800; width: 18px; height: 18px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
 
-.desc {
-    color: #555;
-    margin: 15px 0;
-    line-height: 1.6;
-}
+        /* شريط الحساب */
+        .account-bar { background: var(--gray-light); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 700; border-bottom: 1px solid var(--border); }
+        .account-bar a { color: var(--black); text-decoration: none; display: flex; align-items: center; gap: 5px; }
 
-.price {
-    font-size: 26px;
-    color: #e60023;
-    font-weight: bold;
-    margin: 10px 0;
-}
+        /* السلايدرات */
+        .slider-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-bottom: 1px solid var(--border); }
+        .slider-container::-webkit-scrollbar { display: none; }
+        .slide { min-width: 100%; scroll-snap-align: start; position: relative; }
+        .slide img { width: 100%; height: 200px; object-fit: cover; display: block; }
+        
+        .slider-2 .slide img { height: 120px; }
 
-.old-price {
-    text-decoration: line-through;
-    color: #999;
-    font-size: 16px;
-}
+        /* تعليمات الثقة */
+        .trust-badges { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 20px; background: var(--white); border-bottom: 1px solid var(--border); }
+        .trust-item { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--black); }
+        .trust-item i { font-size: 16px; width: 20px; text-align: center; }
 
-.btn {
-    display: block;
-    background: #25D366;
-    color: white;
-    padding: 15px;
-    margin-top: 20px;
-    text-decoration: none;
-    font-size: 18px;
-    border-radius: 8px;
-}
+        /* قسم المنتجات */
+        .section-header { text-align: center; padding: 25px 20px 15px; }
+        .section-header h2 { font-size: 22px; font-weight: 900; border-bottom: 3px solid var(--black); display: inline-block; padding-bottom: 5px; }
 
-.features {
-    text-align: right;
-    margin-top: 20px;
-}
+        .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px 30px; }
+        .product-card { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+        .product-img-box { position: relative; padding-top: 100%; border-bottom: 1px solid var(--border); }
+        .product-img-box img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; padding: 10px; }
+        .product-info { padding: 12px; text-align: center; display: flex; flex-direction: column; flex-grow: 1; }
+        .product-title { font-size: 13px; font-weight: 800; margin-bottom: 10px; line-height: 1.4; }
+        .price-row { margin-bottom: 12px; }
+        .old-price { font-size: 14px; color: var(--red); text-decoration: line-through; font-weight: 700; margin-left: 5px; }
+        .current-price { font-size: 18px; font-weight: 900; color: var(--black); }
+        .buy-btn { background: var(--white); color: var(--black); border: 2px solid var(--black); width: 100%; padding: 8px; border-radius: 4px; font-weight: 800; font-size: 13px; cursor: pointer; margin-top: auto; transition: 0.3s; }
+        .buy-btn:active { background: var(--black); color: var(--white); }
 
-.features li {
-    margin-bottom: 8px;
-}
-</style>
+        /* الفوتر */
+        .footer { background: var(--black); color: var(--white); padding: 30px 20px 20px; text-align: center; margin-bottom: 60px; }
+        .footer-logo { font-size: 24px; font-weight: 900; margin-bottom: 15px; letter-spacing: 1px; }
+        .footer-links { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .footer-links a { color: var(--white); text-decoration: none; font-size: 14px; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px; }
+        .footer-contact { margin-bottom: 20px; font-size: 14px; font-weight: 500; line-height: 1.8; }
+        .footer-social { display: flex; justify-content: center; gap: 20px; font-size: 24px; margin-top: 20px; }
+        .footer-social a { color: var(--white); text-decoration: none; transition: opacity 0.3s; }
+        .footer-social a:active { opacity: 0.7; }
+        
+        .footer-copyright { margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: rgba(255,255,255,0.6); letter-spacing: 0.5px; direction: ltr; }
 
+        /* زر الواتساب */
+        .whatsapp-float {
+            position: fixed; bottom: 90px; right: 20px;
+            background-color: var(--black); color: var(--white);
+            width: 55px; height: 55px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 30px; text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 999;
+            animation: pulse-wa 2s infinite;
+            border: 2px solid var(--white);
+        }
+        @keyframes pulse-wa {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
+        }
+
+        /* شريط التنقل السفلي */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 480px; margin: 0 auto; background: var(--white); display: flex; justify-content: space-around; padding: 15px 10px 20px; border-top: 1px solid var(--black); z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #666; text-decoration: none; gap: 4px; }
+        .nav-item i { font-size: 20px; }
+        .nav-item span { font-size: 11px; font-weight: 700; }
+        .nav-item.active { color: var(--black); }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
+    <div class="promo-bar">عروض حصرية 🔥 التوصيل بالمجان والدفع عند الاستلام</div>
 
-<h1>فرشاة تصفيف الشعر 5 في 1</h1>
+    <header class="header">
+        <div class="brand">MATN STORE</div>
+        <div class="header-icons">
+            <a href="#" class="icon-btn"><i class="fa-solid fa-magnifying-glass"></i></a>
+            <a href="#" class="icon-btn">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="cart-badge">2</span>
+            </a>
+        </div>
+    </header>
 
-<img class="product-img" src="https://via.placeholder.com/300">
+    <div class="account-bar">
+        <span>مرحباً بك في متجرنا!</span>
+        <a href="#"><i class="fa-regular fa-user"></i> تسجيل الدخول / إنشاء حساب</a>
+    </div>
 
-<p class="desc">
-جففي وسرحي شعرك في نفس الوقت بسهولة.  
-نتيجة احترافية في دقائق بدون الحاجة لصالون.
-</p>
+    <div class="slider-container">
+        <div class="slide">
+            <img src="https://placehold.co/480x200/000000/ffffff?text=MATN+STORE+OFFERS" alt="Banner 1">
+        </div>
+        <div class="slide">
+            <img src="https://placehold.co/480x200/ffffff/000000?text=NEW+COLLECTION" alt="Banner 2">
+        </div>
+    </div>
 
-<div class="old-price">399 درهم</div>
-<div class="price">299 درهم فقط</div>
+    <div class="slider-container slider-2">
+        <div class="slide">
+            <img src="https://placehold.co/480x120/1a1a1a/ffffff?text=Free+Shipping" alt="توصيل مجاني">
+        </div>
+        <div class="slide">
+            <img src="https://placehold.co/480x120/f5f5f5/000000?text=Cash+On+Delivery" alt="الدفع عند الاستلام">
+        </div>
+    </div>
 
-<ul class="features">
-<li>✔️ تسريح + تجفيف في نفس الوقت</li>
-<li>✔️ مناسبة لجميع أنواع الشعر</li>
-<li>✔️ سهلة الاستعمال</li>
-<li>✔️ نتائج سريعة وفعالة</li>
-</ul>
+    <div class="trust-badges">
+        <div class="trust-item"><i class="fa-solid fa-hand-holding-dollar"></i><span>الدفع عند الاستلام</span></div>
+        <div class="trust-item"><i class="fa-solid fa-truck-fast"></i><span>توصيل مجاني</span></div>
+        <div class="trust-item"><i class="fa-solid fa-shield-check"></i><span>ضمان الجودة</span></div>
+        <div class="trust-item"><i class="fa-solid fa-headset"></i><span>دعم فني متواصل</span></div>
+    </div>
 
-<a class="btn" href="https://wa.me/212632300445">
-اطلب الآن عبر واتساب
-</a>
+    <div class="section-header"><h2>الأكثر مبيعاً</h2></div>
 
-</div>
+    <div class="products-grid">
+        <div class="product-card">
+            <div class="product-img-box"><img src="https://placehold.co/300x300/ffffff/000000?text=Sokany+Brush" alt="Sokany"></div>
+            <div class="product-info">
+                <h3 class="product-title">فرشاة فرد الشعر بالهواء الساخن SOKANY</h3>
+                <div class="price-row"><span class="old-price">320 د.م</span><span class="current-price">279 د.م</span></div>
+                <button class="buy-btn">أطلب الآن</button>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-img-box"><img src="https://placehold.co/300x300/ffffff/000000?text=One+Step" alt="One Step"></div>
+            <div class="product-info">
+                <h3 class="product-title">المشط الحراري الألماني One Step</h3>
+                <div class="price-row"><span class="old-price">250 د.م</span><span class="current-price">179 د.م</span></div>
+                <button class="buy-btn">أطلب الآن</button>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-img-box"><img src="https://placehold.co/300x300/ffffff/000000?text=Enzo+Brush" alt="Enzo Brush"></div>
+            <div class="product-info">
+                <h3 class="product-title">المشط الحراري 5 في 1 ENZO السحري</h3>
+                <div class="price-row"><span class="old-price">550 د.م</span><span class="current-price">399 د.م</span></div>
+                <button class="buy-btn">أطلب الآن</button>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-img-box"><img src="https://placehold.co/300x300/ffffff/000000?text=Sokany+2-in-1" alt="Sokany 2-in-1"></div>
+            <div class="product-info">
+                <h3 class="product-title">فرشاة SOKANY 2-in-1 تنشيف وتصفيف</h3>
+                <div class="price-row"><span class="old-price">350 د.م</span><span class="current-price">249 د.م</span></div>
+                <button class="buy-btn">أطلب الآن</button>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-img-box"><img src="https://placehold.co/300x300/ffffff/000000?text=Enzo+Straightener" alt="Enzo Straightener"></div>
+            <div class="product-info">
+                <h3 class="product-title">مكواة الشعر الاحترافية ENZO</h3>
+                <div class="price-row"><span class="old-price">299 د.م</span><span class="current-price">199 د.م</span></div>
+                <button class="buy-btn">أطلب الآن</button>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-img-box"><img src="https://placehold.co/300x300/ffffff/000000?text=Sokany+Curler" alt="Sokany Curler"></div>
+            <div class="product-info">
+                <h3 class="product-title">جهاز تمويج الشعر SOKANY</h3>
+                <div class="price-row"><span class="old-price">220 د.م</span><span class="current-price">149 د.م</span></div>
+                <button class="buy-btn">أطلب الآن</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-logo">MATN STORE</div>
+        <div class="footer-links">
+            <a href="#">من نحن</a>
+            <a href="#">سياسة الإسترجاع</a>
+            <a href="#">الأسئلة الشائعة (FAQ)</a>
+            <a href="#">تتبع طلبك</a>
+        </div>
+        <div class="footer-contact">
+            <p><i class="fa-solid fa-envelope"></i> البريد الالكتروني: matnmarket@gmail.com</p>
+            <p><i class="fa-brands fa-whatsapp"></i> رقم الدعم: 212632300445+</p>
+        </div>
+        <div class="footer-social">
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+        </div>
+        <div class="footer-copyright">&copy; 2026 MATN STORE. جميع الحقوق محفوظة</div>
+    </footer>
+
+    <a href="https://wa.me/212632300445" class="whatsapp-float" target="_blank">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active"><i class="fa-solid fa-house"></i><span>الرئيسية</span></a>
+        <a href="#" class="nav-item"><i class="fa-regular fa-star"></i><span>الآراء</span></a>
+        <a href="#" class="nav-item"><i class="fa-regular fa-user"></i><span>حسابي</span></a>
+    </nav>
 
 </body>
 </html>
